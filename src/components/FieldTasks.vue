@@ -1,9 +1,15 @@
 <template>
   <div class="field-tasks">
-    <h2 class="field-tasks__title">{{ activeList ? activeList.name : 'Список дел не выбран' }}</h2>
+    <h2 class="field-tasks__title">
+      {{ activeList ? activeList.name : "Список дел не выбран" }}
+    </h2>
 
     <ul v-if="activeList" class="field-tasks__task-list">
-      <Task v-for="task of activeList.tasks" :key="task.id" v-bind:task="task" />
+      <Task
+        v-for="task of activeListTasks"
+        :key="task.id"
+        v-bind:task="task"
+      />
     </ul>
 
     <FormAdd
@@ -17,14 +23,14 @@
 
 <script>
 import FormAdd from "./FormAdd";
-import Task from './Task';
+import Task from "./Task";
 
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
     FormAdd,
-    Task
+    Task,
   },
 
   data() {
@@ -33,49 +39,34 @@ export default {
         placeholder: "Введите дело",
         checkboxName: "Срочно",
         buttonName: "Добавить дело",
-        emitName: 'addTask'
+        emitName: "addTask",
       },
     };
   },
 
-  computed: mapGetters(['activeList']),
+  computed: mapGetters(["activeListTasks", 'activeList']),
 
   methods: {
-    ...mapMutations(["createTask", "watcherForLists"]),
+    ...mapActions(["postNewTask"]),
+    ...mapMutations([]),
 
     addTask(taskName, isUrgency) {
-      const newTask = {
-        id: this.activeList.tasks.length + 1,
+      if(this.postNewTask({
         name: taskName,
         list_id: this.activeList.id,
-        executor_user_id: 1,
+        executor_user_id: this.activeList.user_id,
+        urgency: isUrgency ? 5 : 1,
         is_completed: false,
-        description: "description task",
-        urgency: isUrgency ? 5 : 0,
-        created_at: new Date().toLocaleString("ru", {
-          day: "numeric",
-          month: "numeric",
-          year: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        }),
-        updated_at: new Date().toLocaleString("ru", {
-          day: "numeric",
-          month: "numeric",
-          year: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        }),
+      })){
+        alert(`Вы создали дело: ${taskName}`)
       }
-
-      this.createTask(newTask);
-      this.watcherForLists(newTask);
-    }
-  }
+      
+    },
+  },
 };
 </script>
 
-<style scoped>
+<style>
 .field-tasks {
   flex: 1 1 auto;
   padding: 10px 15px;
@@ -94,7 +85,18 @@ export default {
   margin-bottom: 40px;
 }
 
+.field-tasks__task-list {
+  overflow: auto;
+  padding: 0 5px;
+  height: 100%;
+}
+
 .field-tasks__form {
   margin-top: auto;
+}
+
+.field-tasks__form input[type='text']{
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 </style>

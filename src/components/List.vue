@@ -36,11 +36,11 @@ export default {
     isActive() {
       return this.activeId === this.list.id;
     },
-    stateCompletedList() {
-      return this.list.tasks.length && this.list.is_completed
-    },
     stateNotCompletedList() {
-      return this.list.tasks.length
+      return this.list.is_completed == false && this.list.count_tasks;
+    },
+    stateCompletedList() {
+      return this.list.is_completed == true;
     },
   },
 };
@@ -83,12 +83,19 @@ export default {
   cursor: pointer;
 }
 
-.list_not-completed{
+.list__delete-btn:hover{
+  box-shadow: 2px 2px 3px #ccc;
+}
+
+.list__delete-btn:active {
+  transform: scale(0.9);
+}
+
+.list_not-completed {
   background-color: rgba(5, 99, 5, 0.26);
 }
 
-.list_completed{
+.list_completed {
   background-color: rgba(134, 134, 134, 0.253);
 }
-
 </style>
