@@ -5,26 +5,22 @@
       type="checkbox"
       :id="task.id"
       :checked="task.is_completed"
-      v-on:change="toggleTaskState(task)"
+      v-on:change="updateStateTask(task)"
     />
 
-    <label :class="['task__label', {'task__label_type_urgency': task.urgency}]" :for="task.id">
+    <label :class="['task__label', { task__label_type_urgency: task.urgency == 5 }]" :for="task.id">
       <div class="task__label-inner">
         <span class="task__name">{{ task.name }}</span>
         <time class="task__time">{{ task.created_at }}</time>
       </div>
     </label>
 
-    <button
-      class="task__button-delete"
-      type="button"
-      v-on:click="deleteTask({listId: task.list_id, taskId: task.id, taskName: task.name})"
-    ></button>
+    <button class="task__button-delete" type="button" v-on:click="confirmDeleteTask({ id: task.id })"></button>
   </li>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapActions } from "vuex";
 
 export default {
   props: {
@@ -32,9 +28,14 @@ export default {
   },
 
   methods: {
-    ...mapMutations(["toggleTaskState", "deleteTask"]),
+    ...mapActions(["deleteTask", "updateStateTask"]),
 
-  }
+    confirmDeleteTask(id) {
+      if (confirm(`Удалить дело ${this.task.name} ?`)) {
+        this.deleteTask(id);
+      }
+    },
+  },
 };
 </script>
 
@@ -75,13 +76,13 @@ export default {
 }
 
 @keyframes checked-btn {
-  0%{
+  0% {
     transform: scale(0);
   }
-  80%{
+  80% {
     transform: scale(1.3);
   }
-  100%{
+  100% {
     transform: scale(1);
   }
 }
@@ -110,20 +111,20 @@ export default {
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
-  /* animation: urgency 5s infinite ease forwards; */
+  animation: urgency 5s infinite ease forwards;
 }
 
-/* @keyframes urgency {
-  0%{
+@keyframes urgency {
+  0% {
     transform: scale(1);
   }
-  50%{
+  50% {
     transform: scale(1.2);
   }
-  100%{
+  100% {
     transform: scale(1);
   }
-} */
+}
 
 .task__name {
   margin-right: 20px;
@@ -143,5 +144,13 @@ export default {
   background: url("../assets/svg/Close.svg") no-repeat center/20px;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.task__button-delete:hover {
+  box-shadow: 2px 2px 3px #ccc;
+}
+
+.task__button-delete:active {
+  transform: scale(0.9);
 }
 </style>

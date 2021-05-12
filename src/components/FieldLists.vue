@@ -1,7 +1,7 @@
 <template>
   <div class="field-lists">
     <div class="field-lists__filter">
-      <!-- filter -->
+      
       <select class="field-lists__filter-select" v-model="filter">
         <option value="all">Все</option>
         <option value="not-completed">Незавершенные</option>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
 import List from "./List";
 import FormAdd from "./FormAdd";
@@ -58,38 +58,26 @@ export default {
   },
 
   methods: {
-    ...mapMutations(["deleteList", "createList", "setActiveList"]),
+    ...mapActions(["postNewList", "deleteList"]),
+    ...mapMutations(["setActiveList"]),
 
     createdListForTasks(listName) {
-      this.createList({
-        name: listName,
-        id: this.$store.state.lists.lists.length + 1,
-        created_at: new Date().toLocaleString("ru", {
-          day: "numeric",
-          month: "numeric",
-          year: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        }),
-        updated_at: new Date().toLocaleString("ru", {
-          day: "numeric",
-          month: "numeric",
-          year: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        }),
-        count_tasks: 0,
-        tasks: [],
-        is_closed: false,
-        is_completed: false,
-      });
+      if (
+        this.postNewList({
+          name: listName,
+          is_closed: false,
+        })
+      ) {
+        alert(`Вы создали список: ${listName}`);
+      }
     },
   },
+
   watch: {
     filter(value) {
       this.$store.state.lists.valueFilteredLists = value;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -122,6 +110,7 @@ export default {
 .field-lists__lists {
   height: 100%;
   padding: 10px 15px;
+  overflow: auto;
 }
 .field-lists__lists-item:not(:last-child) {
   margin-bottom: 10px;
