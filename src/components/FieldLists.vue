@@ -1,7 +1,7 @@
 <template>
   <div class="field-lists">
     <div class="field-lists__filter">
-      
+      <!-- filter -->
       <select class="field-lists__filter-select" v-model="filter">
         <option value="all">Все</option>
         <option value="not-completed">Незавершенные</option>

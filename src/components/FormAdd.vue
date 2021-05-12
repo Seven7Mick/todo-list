@@ -86,10 +86,5 @@ export default {
   font-size: 14px;
   font-weight: 600;
   line-height: 140%;
-  cursor: pointer;
-}
-
-.form__btn:hover{
-  box-shadow: 2px 2px 3px #ccc;
 }
 </style>

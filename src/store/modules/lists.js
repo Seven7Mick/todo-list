@@ -32,7 +32,7 @@ export default {
       if (responseData.status === "success") {
         ctx.commit('addNewList', responseData.data.attributes)
 
-      } 
+      }
     },
 
     // Обновление состояни Листа
@@ -99,7 +99,7 @@ export default {
 
       if (responseDataTask.status === "success") {
         ctx.commit('addNewTask', responseDataTask.data.attributes)
-      } 
+      }
     },
 
     // Обновление дела
@@ -188,11 +188,21 @@ export default {
     },
 
     deleteTask(state, taskId) {
+      const listId = state.tasks.find(task => task.id === taskId).list_id;
+
       state.tasks = state.tasks.filter(task => task.id !== taskId);
+
+      let watcherTaksOfList = state.tasks.find(task => task.list_id === listId)
+      if (!watcherTaksOfList) {
+        state.lists.find(list => list.id === listId).is_completed = false;
+        state.lists.find(list => list.id === listId).count_tasks = 0;
+      }
+
     },
 
     addNewTask(state, newTask) {
       state.tasks.push(newTask);
+      state.lists.find(list => list.id === newTask.list_id).count_tasks++
     }
   },
 

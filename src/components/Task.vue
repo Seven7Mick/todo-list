@@ -28,7 +28,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["deleteTask", "updateStateTask"]),
+    ...mapActions(["deleteTask", "updateStateTask", "updateStateList"]),
 
     confirmDeleteTask(id) {
       if (confirm(`Удалить дело ${this.task.name} ?`)) {

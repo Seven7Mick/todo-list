@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <div class="nav">
-      <router-link to="/">Приложение</router-link>
-      <router-link to="/login">Вход</router-link>
+      <router-link class="nav__link" to="/">Приложение</router-link>
+      <router-link class="nav__link" to="/login">Вход</router-link>
     </div>
     <div class="container">
       <router-view />
@@ -15,10 +15,12 @@ export default {
   name: "App",
   components: {},
   async mounted() {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
 
     if (token) {
-      const user = await fetch(`https://academy2.smw.tom.ru/vasilchenko-konstantin/todo-list/user?access_token=${token}`);
+      const user = await fetch(
+        `https://academy2.smw.tom.ru/vasilchenko-konstantin/todo-list/user?access_token=${token}`
+      );
 
       if (user.ok) {
         this.$store.dispatch("fetchLists");
@@ -28,7 +30,7 @@ export default {
       }
     }
 
-    if (this.$router.currentRoute.name !== 'login') {
+    if (this.$router.currentRoute.name !== "login") {
       this.$router.push("/login");
     }
   },
@@ -39,8 +41,8 @@ export default {
         this.$store.dispatch("fetchLists");
         this.$store.dispatch("fetchTasks");
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -56,8 +58,11 @@ li {
   list-style: none;
 }
 
-a {
+a,
+a:active,
+a:visited {
   text-decoration: none;
+  color: #000000;
 }
 
 #app {
@@ -92,4 +97,5 @@ fieldset {
   margin-bottom: 10px;
   border-radius: 10px;
 }
+
 </style>

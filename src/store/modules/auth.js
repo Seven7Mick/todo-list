@@ -48,7 +48,7 @@ export default {
 
         await router.push({ path: '/', query: { fetchData: true } });
         
-      } 
+      }
     },
   },
   getters: {

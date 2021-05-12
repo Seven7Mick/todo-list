@@ -40,7 +40,7 @@ export default {
       return this.list.is_completed == false && this.list.count_tasks;
     },
     stateCompletedList() {
-      return this.list.is_completed == true;
+      return this.list.is_completed == true && this.list.count_tasks !== 0;
     },
   },
 };
